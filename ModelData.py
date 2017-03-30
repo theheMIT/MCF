@@ -29,6 +29,7 @@ if __name__ == '__main__':
     ID = 0
 
     for user in range(len(timeLines)):
+        usChar = timeLines[user]['userCharacteristics']
         for episode in timeLines[user]['activities']:
             if episode['activityType'] == 'travel':
 
@@ -43,18 +44,16 @@ if __name__ == '__main__':
                 if not purposeFound:
                     tripPurpose = 'Not Found'
 
-                # Create trip information
-                origin = str(episode['latPrev']) + ',' + str(episode['lonPrev'])
-                destination = str(episode['lat']) + ',' + str(episode['lon'])
-
                 # Create entry
                 entries.append([ID, user['userID'], episode['activity'], tripPurpose, episode['startDay'],
-                                episode['startTime'], episode['endTime'], episode['postCodePrev'],
-                                beLookUp[episode['postCodePrev'][kIndex]], beLookUp[episode['postCodePrev'][lcaIndex]],
-                                episode['postCode'], beLookUp[episode['postCode'][kIndex]],
-                                beLookUp[episode['postCode'][lcaIndex]], episode['emissionsKg']])
-
-                # Associate with socio-demographic variables
+                                episode['startTime'], episode['endTime'], episode['postalCodePrev'],
+                                beLookUp[episode['postalCodePrev'][kIndex]],
+                                beLookUp[episode['postalCodePrev'][lcaIndex]], episode['postalCode'],
+                                beLookUp[episode['postalCode'][kIndex]], beLookUp[episode['postalCode'][lcaIndex]],
+                                usChar['H2_DwellingType'], usChar['H3_Ethnic'], usChar['H4_TotalPax'],
+                                usChar['H5_VehAvailable'], usChar['H8_BikeQty'], usChar['P1_Age'], usChar['P2_Gender'],
+                                usChar['P3c_NoLicense'], usChar['P5_Employ'], usChar['P6Industry'], usChar['P6_Occup'],
+                                usChar['P7_WorkHrs']])
 
                 ID += 1
 
@@ -63,8 +62,10 @@ if __name__ == '__main__':
             writer = csv.writer(data)
             writer.writerow(('ID', 'userID', 'mode', 'tripPurpose', 'startDay', 'startTime', 'endTime', 'postalCode',
                              'postalCodePrev', 'carTT', 'carCost', 'carEmission', 'mrtTT', 'mrtCost', 'mrtEmission',
-                             'busTT', 'busCost', 'busEmission', 'walkTT', 'walkCost', 'walkEmission', 'emissionsKg',
-                             'oPostCode', 'oKCluster', 'oLCACluster', 'dPostCode', 'dKCluster', 'dLCACluster'))  # Header row
+                             'busTT', 'busCost', 'busEmission', 'walkTT', 'walkCost', 'walkEmission', 'oPostCode',
+                             'oKCluster', 'oLCACluster', 'dPostCode', 'dKCluster', 'dLCACluster', 'dwellingType',
+                             'ethnicity', 'HHSize', 'vehicles', 'bikes', 'age', 'gender', 'noLicense', 'employed',
+                             'industry', 'occupation', 'workHrs'))  # Header row
             for row in range(len(entries)):
                 writer.writerow(entries[row])  # Data rows
 
